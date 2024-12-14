@@ -8,8 +8,8 @@ from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import train_test_split
 
 # from src.MajorBtech.components.dataInject import 
-from src.MajorBtech.exception import CustomException
-from src.MajorBtech.logger import logging
+from src.exception import CustomException
+from src.logger import logging
 
 @dataclass
 class DataTransformationConfig:
@@ -19,9 +19,9 @@ class DataTransformation:
     def __init__(self):
         self.data_transformation_config = DataTransformationConfig()
         
-    def Initate_data_transformation(self, train_data_path):
+    def Initate_data_transformation(self, raw_data_path):
         try:
-            df = train_data_path
+            df = pd.read_csv(raw_data_path)
             
             logging.info("Reading the data completed")
             
@@ -42,7 +42,6 @@ class DataTransformation:
             df = df[df['glucose'].isin([1, 2, 3])]
             df = df.dropna()
             df = df[df['gender'].isin([1, 2])]
-            #Creating New Features
             df['bmi'] = df['weight'] / (df['height'] / 100) ** 2
 
             # conditions = [

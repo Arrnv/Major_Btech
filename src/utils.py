@@ -1,11 +1,12 @@
 import os 
 import sys
-from src.MajorBtech.exception import CustomException
-from src.MajorBtech.logger import logging
+from src.exception import CustomException
+from src.logger import logging
 import pandas as pd
 import pymysql
 from dotenv import load_dotenv
-
+# import dill
+import pickle
 load_dotenv()
 host= os.getenv("host")
 user=os.getenv("user")
@@ -27,6 +28,19 @@ def read_sql_data():
         print(df.head())
         return df
         
+    except Exception as e:
+        raise CustomException(e, sys)
+    
+    
+def save_object(file_path, obj):
+    try:
+        dir_path = os.path.dirname(file_path)
+
+        os.makedirs(dir_path, exist_ok=True)
+
+        with open(file_path, "wb") as file_obj:
+            pickle.dump(obj, file_obj)
+
     except Exception as e:
         raise CustomException(e, sys)
     

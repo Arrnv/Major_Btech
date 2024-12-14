@@ -1,15 +1,19 @@
-from src.MajorBtech.logger import logging
-from src.MajorBtech.exception import CustomException
+# from src.logger import logging
+# from src.exception import CustomException
 import sys
-from src.MajorBtech.components.dataInject import DataInjection, DataInjectionConfig
+from src.components.dataInject import DataInjection, DataInjectionConfig
+from src.components.dataTransformation import DataTransformation
+from src.components.dataTransformation import DataTransformationConfig
 
+from src.components.modeltrainer import ModelTrainerConfig
+from src.components.modeltrainer import ModelTrainer
 
 if __name__=="__main__":
-    logging.info("The execution has started")
-    
-    try:
-        Datainjection=DataInjection()
-        Datainjection.initate_data_injection()
-        
-    except Exception as e:
-        raise CustomException(e,sys)
+    obj=DataInjection()
+    raw_data_path=obj.initate_data_injection()
+
+    data_transformation=DataTransformation()
+    X_train, X_test, y_train, y_test=data_transformation.Initate_data_transformation(raw_data_path)
+
+    modeltrainer=ModelTrainer()
+    print(modeltrainer.InitateModelTrainer(X_train, X_test, y_train,  y_test))

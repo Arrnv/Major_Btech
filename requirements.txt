@@ -5,3 +5,6 @@ scikit-learn
 python-dotenv
 mysql-connector-python
 pymysql
+tensorflow-metal
+tensorflow-macos
+drill

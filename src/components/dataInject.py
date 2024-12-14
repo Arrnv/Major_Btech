@@ -1,10 +1,16 @@
 import os 
 import sys
-from src.MajorBtech.exception import CustomException
-from src.MajorBtech.logger import logging
+from src.exception import CustomException
+from src.logger import logging
 import pandas as pd
 from dataclasses import dataclass
-from src.MajorBtech.utils import read_sql_data
+from src.utils import read_sql_data
+
+from src.components.dataTransformation import DataTransformation
+from src.components.dataTransformation import DataTransformationConfig
+
+from src.components.modeltrainer import ModelTrainerConfig
+from src.components.modeltrainer import ModelTrainer
 
 @dataclass
 class DataInjectionConfig:
@@ -28,3 +34,13 @@ class DataInjection:
             )
         except Exception as e:
             raise CustomException(e,sys)
+        
+# if __name__=="__main__":
+#     obj=DataInjection()
+#     raw_data_path=obj.initate_data_injection()
+
+#     data_transformation=DataTransformation()
+#     X_train, X_test, y_train, y_test=data_transformation.Initate_data_transformation(raw_data_path)
+
+#     modeltrainer=ModelTrainer()
+#     print(modeltrainer.initiate_model_trainer(X_train, X_test, y_train,  y_test))

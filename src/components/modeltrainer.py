@@ -32,6 +32,7 @@ class ModelTrainer:
             ], voting='soft')
             logging.info("Creating model")
             ensemble_model.fit(X_train, y_train)
+            logging.info("Model created")
             save_object(
                file_path=self.Model_Trainer_Config.trained_model_path,
                obj=ensemble_model

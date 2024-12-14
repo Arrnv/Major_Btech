@@ -108,6 +108,7 @@ class DataTransformation:
 
             X_transformed = preprocessor.fit_transform(X) 
             X_train, X_test, y_train, y_test = train_test_split(X_transformed, y, test_size=0.2, random_state=42)
+            logging.info("Train test Split is done")
 
             return(
                 X_train, 

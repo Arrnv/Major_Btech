@@ -6,7 +6,7 @@ from src.utils import load_object
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 from sklearn.model_selection import train_test_split
-
+import os
 from dataclasses import dataclass
 @dataclass
 class PredictionPipeline:
@@ -14,6 +14,8 @@ class PredictionPipeline:
         pass
     def predict(self, df):
         try:
+            model_path=os.path.join("models","model.pkl")
+            model=load_object(file_path=model_path)
             df['age'] = df['age'] / 365.25
             # df.age
             df = df.rename(columns={'ap_hi': 'systolic_b_pressure'})
@@ -68,7 +70,7 @@ class PredictionPipeline:
             data_encoded_cleaned = data_encoded.drop(columns=features_to_drop)
             
 
-            X = data_encoded_cleaned.drop(columns=['id', 'cardio_disease'])
+            X = data_encoded_cleaned.drop(columns=[ 'cardio_disease'])
             
 
             numeric_features = [
@@ -92,13 +94,15 @@ class PredictionPipeline:
                     ('cat', OneHotEncoder(drop='first'), categorical_features) 
                 ]
             )
+            X_transformed = preprocessor.fit_transform(X)
             
-            pass
+            x = model.predict(X_transformed)
+            return x
         except Exception as e:
             raise CustomException(e,sys)
 class CustomInput:
     def __init__(self,
-                 age: float,
+                 age: int,
                  gender: int,
                  height: int,
                  weight: int,
@@ -109,11 +113,7 @@ class CustomInput:
                  smoke: int,
                  alco: int,
                  active: int,
-                 cardio: int,
-                 age_years: int,
-                 bmi: float,
-                 bp_category: str,
-                 bp_category_encoded: str
+                 cardio: int
                  ):
         self.age = age
         self.gender = gender
@@ -127,14 +127,10 @@ class CustomInput:
         self.alco = alco
         self.active = active
         self.cardio = cardio
-        self.age_years = age_years
-        self.bmi = bmi
-        self.bp_category = bp_category
-        self.bp_category_encoded = bp_category_encoded
         
     def GetDataAsDataframe(self):
         try:
-            predict_data={
+            predict_data = {
                 "age": self.age,
                 "gender": self.gender,
                 "height": self.height,
@@ -146,13 +142,10 @@ class CustomInput:
                 "smoke": self.smoke,
                 "alco": self.alco,
                 "active": self.active,
-                "cardio": self.cardio,
-                "age_years": self.age_years,
-                "bmi": self.bmi,
-                "bp_category": self.bp_category,
-                "bp_category_encoded": self.bp_category_encoded
+                "cardio": self.cardio
             }
             
-            return pd.DataFrame(predict_data,index=[0])
+            return pd.DataFrame(predict_data, index=[0])
         except Exception as e:
-            raise CustomException(e,sys)
+            print(f"An error occurred: {e}", file=sys.stderr)
+            raise

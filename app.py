@@ -32,7 +32,7 @@ from src.pipeline.prediction_pipeline import CustomInput,PredictionPipeline
 pipeline = PredictionPipeline()
 
 class InputData(BaseModel):
-    age: float
+    age: int
     gender: int
     height: int
     weight: int
@@ -44,10 +44,6 @@ class InputData(BaseModel):
     alco: int
     active: int
     cardio: int
-    age_years: int
-    bmi: float
-    bp_category: str
-    bp_category_encoded: str
 
 
 app = FastAPI()
@@ -73,14 +69,8 @@ async def predict_data(input_data: InputData):
             smoke=input_data.smoke,
             alco=input_data.alco,
             active=input_data.active,
-            cardio=input_data.cardio,
-            age_years=input_data.age_years,
-            bmi=input_data.bmi,
-            bp_category=input_data.bp_category,
-            bp_category_encoded=input_data.bp_category_encoded
+            cardio=input_data.cardio
         )
-
-
         input_df = custom_input.GetDataAsDataframe()
         # print(input_df)
         # Perform prediction

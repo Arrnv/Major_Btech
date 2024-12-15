@@ -8,3 +8,6 @@ pymysql
 tensorflow-metal
 tensorflow-macos
 drill
+fastapi[standard]
+uvicorn
+pydantic

@@ -6,17 +6,14 @@ import pandas as pd
 from dataclasses import dataclass
 from src.utils import read_sql_data
 
-from src.components.dataTransformation import DataTransformation
-from src.components.dataTransformation import DataTransformationConfig
 
-from src.components.modeltrainer import ModelTrainerConfig
-from src.components.modeltrainer import ModelTrainer
+
 
 @dataclass
 class DataInjectionConfig:
     raw_data_path:str=os.path.join('artifact','raw.csv')
-    # train_data_path:str=os.path.join('artifact','train.csv')
-    # test_data_path:str=os.path.join('artifact','test.csv')
+    train_data_path:str=os.path.join('artifact','train.csv')
+    test_data_path:str=os.path.join('artifact','test.csv')
     
 
 class DataInjection:

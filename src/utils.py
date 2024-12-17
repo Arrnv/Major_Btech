@@ -24,7 +24,7 @@ def read_sql_data():
             db=db
         )
         logging.info(f"Connection established with {mydb}")
-        df = pd.read_sql_query('select * from cardio_train',mydb)
+        df = pd.read_sql_query('select * from cardio_data_processed',mydb)
         print(df.head())
         return df
         

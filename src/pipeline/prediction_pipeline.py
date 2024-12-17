@@ -4,6 +4,8 @@ from src.exception import CustomException
 from src.logger import logging
 from src.utils import load_object
 import os
+
+
 class PredictPipeline:
     def __init__(self):
         pass
@@ -28,9 +30,8 @@ class PredictPipeline:
     
     def preprocess_input_data(self, df):
         try:
-            
+            # print(df)
             df['age'] = df['age'] / 365.25
-            df.age
 
             df = df.rename(columns={'ap_hi': 'systolic_b_pressure'})
             df = df.rename(columns={'ap_lo': 'diastolic_b_pressure'})
@@ -38,6 +39,9 @@ class PredictPipeline:
             df = df.rename(columns={'alco': 'alcohol'})
             df = df.rename(columns={'active': 'physically_active'})
             df = df.rename(columns={'cardio': 'cardio_disease'})
+            print("weight Problem")
+            print(df.info())
+            print("did got it")
             df['bmi'] = df['weight'] / (df['height'] / 100) ** 2
             categories = ['normal', 'prehypertension', 'hypertension']
             df['blood_pressure_category'] = pd.cut(
@@ -57,14 +61,14 @@ class PredictPipeline:
             data_encoded = pd.get_dummies(df, columns=non_numeric_columns, drop_first=True)
             features_to_drop = [
                 'gender', 'smoke', 'alcohol', 'physically_active', 
-                'pressure_ratio', 'weight', 'height_weight_ratio', 'cholesterol'
+                'pressure_ratio', 'weight', 'height_weight_ratio', 'cholesterol', 'cardio_disease'
             ]
 
             features_to_drop = [col for col in features_to_drop if col in data_encoded.columns]
             # print("Features to drop:", features_to_drop)
 
             data_encoded_cleaned = data_encoded.drop(columns=features_to_drop)
-            print(data_encoded_cleaned.info())
+            # print(data_encoded_cleaned.info())
             return data_encoded_cleaned
             # if isinstance(raw_data, dict):
             #     raw_data = pd.DataFrame([raw_data])
@@ -100,6 +104,7 @@ class PredictPipeline:
             # logging.info("Data transformation for single input completed.")
             
             # return processed_data
-            pass
         except Exception as e:
             raise CustomException(f"Error in preprocessing single input: {e}", sys)
+        
+

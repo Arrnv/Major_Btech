@@ -1,32 +1,36 @@
+from fastapi import FastAPI
+import numpy as np
 import pandas as pd
+from pydantic import BaseModel
 from src.pipeline.prediction_pipeline import PredictPipeline
 
-# Define the input data model
-custom_input_data = {
-  "age": 16424,  # age in days (roughly 45 years)
-  "gender": 1,  # Male
-  "height": 170,  # cm
-  "weight": 75,  # kg
-  "ap_hi": 130,  # Systolic BP
-  "ap_lo": 85,  # Diastolic BP
-  "cholesterol": 2,  # Cholesterol level
-  "gluc": 1,  # Glucose level
-  "smoke": 0,  # Does not smoke
-  "alco": 1,  # Drinks alcohol
-  "active": 1,  # Active
-  "cardio": 0  # No cardio disease
-}
+class CustomData(BaseModel):
+    age: int
+    gender: int
+    height: float
+    weight: float
+    ap_hi: int
+    ap_lo: int
+    cholesterol: int
+    gluc: int
+    smoke: int
+    alco: int
+    active: int
+    cardio:int
+    age_years: int
+    bmi:float
+    bp_category:str
+    bp_category_encoded:str
 
-# Convert the input data into a pandas DataFrame
-input_df = pd.DataFrame([custom_input_data])
+app = FastAPI()
 
-# Initialize the prediction pipeline
-predict_pipeline = PredictPipeline()
-
-# Use the predict method on the input data
-try:
-    # Make predictions
-    predictions = predict_pipeline.predict(input_df)
-    print(f"Predictions: {predictions}")
-except Exception as e:
-    print(f"Error: {str(e)}")
+@app.post("/predict")
+async def predict(data: CustomData):
+    predict_pipeline = PredictPipeline()
+    df = pd.DataFrame([data.dict()])
+    preds = predict_pipeline.predict(df)
+    if isinstance(preds, np.ndarray):
+        preds = preds.tolist()
+    elif not isinstance(preds, (list, dict, str, int, float)):
+        preds = str(preds)
+    return {"preds": preds[0]}
